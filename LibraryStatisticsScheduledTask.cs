@@ -28,7 +28,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 
 		public string Description => "Calculates library statistics.";
 
-		public string Category => "Library";
+		public string Category => "Jellyfin.Plugin.LibraryStatistics";
 		
 		public string Key => "LibraryStatistics";
 
