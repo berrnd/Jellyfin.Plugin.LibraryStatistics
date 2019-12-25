@@ -1,4 +1,6 @@
 ﻿using MediaBrowser.Controller.Entities;
+using MediaBrowser.Controller.Entities.Movies;
+using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Querying;
@@ -47,11 +49,11 @@ namespace Jellyfin.Plugin.LibraryStatistics
 				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating library statistics newest item date");
 				var newestItemQuery = new InternalItemsQuery()
 				{
-					OrderBy = new ValueTuple<string, SortOrder>[] { new ValueTuple<string, SortOrder>(ItemSortBy.DateCreated, SortOrder.Descending) },
-					Recursive = true,
+					SourceTypes = new[] { SourceType.Library },
+					IncludeItemTypes = new[] { typeof(Movie).Name, typeof(Episode).Name },
 					IsMissing = false,
-					Limit = 1,
-					SourceTypes = new[] { SourceType.Library }
+					OrderBy = new ValueTuple<string, SortOrder>[] { new ValueTuple<string, SortOrder>(ItemSortBy.DateCreated, SortOrder.Descending) },
+					Limit = 1
 				};
 				Plugin.Instance.LibraryStatistics.NewestItemDate = this.LibraryManager.GetItemsResult(newestItemQuery).Items.First().DateCreated;
 
@@ -65,8 +67,8 @@ namespace Jellyfin.Plugin.LibraryStatistics
 				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating library statistics total file size");
 				var totalFileSizeQuery = new InternalItemsQuery()
 				{
-					Recursive = true,
 					SourceTypes = new[] { SourceType.Library },
+					IncludeItemTypes = new[] { typeof(Movie).Name, typeof(Episode).Name },
 					IsMissing = false
 				};
 
@@ -105,8 +107,8 @@ namespace Jellyfin.Plugin.LibraryStatistics
 				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating library statistics total run time ticks");
 				var totalRunTimeTicksQuery = new InternalItemsQuery()
 				{
-					Recursive = true,
 					SourceTypes = new[] { SourceType.Library },
+					IncludeItemTypes = new[] { typeof(Movie).Name, typeof(Episode).Name },
 					IsMissing = false
 				};
 				Plugin.Instance.LibraryStatistics.TotalRunTimeTicks = this.LibraryManager.GetItemsResult(totalRunTimeTicksQuery).Items.Sum(x => x.RunTimeTicks);
