@@ -11,9 +11,9 @@ namespace Jellyfin.Plugin.LibraryStatistics.Api
 
     public class LibraryStatisticsService : IService
     {
-        private readonly ILogger Logger;
+        private readonly ILogger<LibraryStatisticsService> Logger;
 
-        public LibraryStatisticsService(ILogger logger)
+        public LibraryStatisticsService(ILogger<LibraryStatisticsService> logger)
         {
             this.Logger = logger;
         }

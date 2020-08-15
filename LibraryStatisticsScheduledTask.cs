@@ -17,13 +17,13 @@ namespace Jellyfin.Plugin.LibraryStatistics
 {
 	public class LibraryStatisticsScheduledTask : IScheduledTask, IConfigurableScheduledTask
 	{
-		public LibraryStatisticsScheduledTask(ILogger logger, ILibraryManager libraryManager)
+		public LibraryStatisticsScheduledTask(ILogger<LibraryStatisticsScheduledTask> logger, ILibraryManager libraryManager)
 		{
 			this.Logger = logger;
 			this.LibraryManager = libraryManager;
 		}
 
-		private readonly ILogger Logger;
+		private readonly ILogger<LibraryStatisticsScheduledTask> Logger;
 		private readonly ILibraryManager LibraryManager;
 
 		public string Name => "Library statistics calculation";

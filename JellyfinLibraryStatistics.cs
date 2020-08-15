@@ -9,14 +9,14 @@ namespace Jellyfin.Plugin.LibraryStatistics
 {
 	public class JellyfinLibraryStatistics : IServerEntryPoint
 	{
-		public JellyfinLibraryStatistics(ILogger logger, IJsonSerializer jsonSerializer, ILibraryManager libraryManager)
+		public JellyfinLibraryStatistics(ILogger<JellyfinLibraryStatistics> logger, IJsonSerializer jsonSerializer, ILibraryManager libraryManager)
 		{
 			this.Logger = logger;
 			this.JsonSerializer = jsonSerializer;
 			this.LibraryManager = libraryManager;
 		}
 
-		private readonly ILogger Logger;
+		private readonly ILogger<JellyfinLibraryStatistics> Logger;
 		private readonly IJsonSerializer JsonSerializer;
 		private readonly ILibraryManager LibraryManager;
 
