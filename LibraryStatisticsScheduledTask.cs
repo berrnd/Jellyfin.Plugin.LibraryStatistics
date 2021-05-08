@@ -1,8 +1,8 @@
-﻿using MediaBrowser.Controller.Entities;
+﻿using Jellyfin.Data.Enums;
+using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.Movies;
 using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
-using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.Querying;
 using MediaBrowser.Model.Tasks;
 using Microsoft.Extensions.Logging;
@@ -46,7 +46,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 			{
 				// Newest item date
 				progress.Report(30);
-				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating library statistics newest item date");
+				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating NewestItemDate");
 				var newestItemQuery = new InternalItemsQuery()
 				{
 					SourceTypes = new[] { SourceType.Library },
@@ -64,7 +64,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 
 				// Total file size
 				progress.Report(60);
-				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating library statistics total file size");
+				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating TotalFileSize");
 				var totalFileSizeQuery = new InternalItemsQuery()
 				{
 					SourceTypes = new[] { SourceType.Library },
@@ -73,19 +73,12 @@ namespace Jellyfin.Plugin.LibraryStatistics
 				};
 
 				long totalFileSize = 0;
-				long totalFileSizeWithRedundancy = 0;
 				foreach (var item in this.LibraryManager.GetItemsResult(totalFileSizeQuery).Items)
 				{
 					if (File.Exists(item.Path))
 					{
 						FileInfo fileInfo = new FileInfo(item.Path);
 						totalFileSize += fileInfo.Length;
-						totalFileSizeWithRedundancy += fileInfo.Length;
-
-						if (!item.Path.Contains(@"\ForeignMedia\"))
-						{
-							totalFileSizeWithRedundancy += fileInfo.Length;
-						}
 
 						// Also cache this in item here to reduce filesystem access, see also Emby.Server.Implementations\Dto\DtoService.cs
 						if ((item.Size == null || item.Size == 0))
@@ -95,7 +88,6 @@ namespace Jellyfin.Plugin.LibraryStatistics
 					}
 				}
 				Plugin.Instance.LibraryStatistics.TotalFileSize = totalFileSize;
-				Plugin.Instance.LibraryStatistics.TotalFileSizeWithRedundancy = totalFileSizeWithRedundancy;
 
 				if (cancellationToken.IsCancellationRequested)
 				{
@@ -104,14 +96,14 @@ namespace Jellyfin.Plugin.LibraryStatistics
 
 				// Total run time ticks
 				progress.Report(90);
-				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating library statistics total run time ticks");
+				this.Logger.LogInformation("Jellyfin.Plugin.LibraryStatistics: Recalculating TotalRunTimeMinutes");
 				var totalRunTimeTicksQuery = new InternalItemsQuery()
 				{
 					SourceTypes = new[] { SourceType.Library },
 					IncludeItemTypes = new[] { typeof(Movie).Name, typeof(Episode).Name },
 					IsMissing = false
 				};
-				Plugin.Instance.LibraryStatistics.TotalRunTimeTicks = this.LibraryManager.GetItemsResult(totalRunTimeTicksQuery).Items.Sum(x => x.RunTimeTicks);
+				Plugin.Instance.LibraryStatistics.TotalRunTimeMinutes = TimeSpan.FromTicks(this.LibraryManager.GetItemsResult(totalRunTimeTicksQuery).Items.Sum(x => x.RunTimeTicks).GetValueOrDefault()).TotalMinutes;
 			}
 
 			return Task.CompletedTask;

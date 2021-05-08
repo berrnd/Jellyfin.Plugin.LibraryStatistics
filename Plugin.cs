@@ -5,7 +5,7 @@ using System;
 
 namespace Jellyfin.Plugin.LibraryStatistics
 {
-    public class Plugin : BasePlugin<PluginConfiguration>
+	public class Plugin : BasePlugin<PluginConfiguration>
     {
         public Plugin(IApplicationPaths appPaths, IXmlSerializer xmlSerializer) : base(appPaths, xmlSerializer)
         {

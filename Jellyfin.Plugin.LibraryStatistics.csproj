@@ -1,20 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
-	<AssemblyVersion>1.3.0.0</AssemblyVersion>
+    <TargetFramework>net5.0</TargetFramework>
+	<AssemblyVersion>1.4.0.0</AssemblyVersion>
 	  <Authors>Bernd Bestel</Authors>
 	  <Description>Provides a library statistic API</Description>
 	  <Copyright>Bernd Bestel</Copyright>
 	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
 	  <PackageProjectUrl>https://github.com/berrnd/Jellyfin.Plugin.LibraryStatistics</PackageProjectUrl>
-	  <FileVersion>1.3.0.0</FileVersion>
-	  <Version>1.3.0</Version>
+	  <FileVersion>1.4.0.0</FileVersion>
+	  <Version>1.4.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Jellyfin.Controller" Version="10.6.0" />
-    <PackageReference Include="Jellyfin.Model" Version="10.6.0" />
+    <PackageReference Include="Jellyfin.Controller" Version="10.7.5" />
+    <PackageReference Include="Jellyfin.Model" Version="10.7.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
