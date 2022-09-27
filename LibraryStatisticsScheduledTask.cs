@@ -40,8 +40,8 @@ namespace Jellyfin.Plugin.LibraryStatistics
 
 		public bool IsLogged => true;
 
-		public Task Execute(CancellationToken cancellationToken, IProgress<double> progress)
-		{
+        public Task ExecuteAsync(IProgress<double> progress, CancellationToken cancellationToken)
+        {
 			if (Plugin.Instance.LibraryStatistics == null || Plugin.Instance.LibraryStatistics.NeedsRecalculation)
 			{
 				// Newest item date
@@ -50,7 +50,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 				var newestItemQuery = new InternalItemsQuery()
 				{
 					SourceTypes = new[] { SourceType.Library },
-					IncludeItemTypes = new[] { typeof(Movie).Name, typeof(Episode).Name },
+					IncludeItemTypes = new[] { BaseItemKind.Movie, BaseItemKind.Episode },
 					IsMissing = false,
 					OrderBy = new ValueTuple<string, SortOrder>[] { new ValueTuple<string, SortOrder>(ItemSortBy.DateCreated, SortOrder.Descending) },
 					Limit = 1
@@ -68,7 +68,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 				var totalFileSizeQuery = new InternalItemsQuery()
 				{
 					SourceTypes = new[] { SourceType.Library },
-					IncludeItemTypes = new[] { typeof(Movie).Name, typeof(Episode).Name },
+					IncludeItemTypes = new[] { BaseItemKind.Movie, BaseItemKind.Episode },
 					IsMissing = false
 				};
 
@@ -100,7 +100,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 				var totalRunTimeTicksQuery = new InternalItemsQuery()
 				{
 					SourceTypes = new[] { SourceType.Library },
-					IncludeItemTypes = new[] { typeof(Movie).Name, typeof(Episode).Name },
+					IncludeItemTypes = new[] { BaseItemKind.Movie, BaseItemKind.Episode },
 					IsMissing = false
 				};
 				Plugin.Instance.LibraryStatistics.TotalRunTimeMinutes = TimeSpan.FromTicks(this.LibraryManager.GetItemsResult(totalRunTimeTicksQuery).Items.Sum(x => x.RunTimeTicks).GetValueOrDefault()).TotalMinutes;

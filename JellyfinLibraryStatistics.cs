@@ -1,30 +1,28 @@
 ﻿using MediaBrowser.Controller.Library;
 using MediaBrowser.Controller.Plugins;
-using MediaBrowser.Model.Serialization;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Jellyfin.Plugin.LibraryStatistics
 {
 	public class JellyfinLibraryStatistics : IServerEntryPoint
 	{
-		public JellyfinLibraryStatistics(ILogger<JellyfinLibraryStatistics> logger, IJsonSerializer jsonSerializer, ILibraryManager libraryManager)
+		public JellyfinLibraryStatistics(ILogger<JellyfinLibraryStatistics> logger, ILibraryManager libraryManager)
 		{
 			this.Logger = logger;
-			this.JsonSerializer = jsonSerializer;
 			this.LibraryManager = libraryManager;
 		}
 
 		private readonly ILogger<JellyfinLibraryStatistics> Logger;
-		private readonly IJsonSerializer JsonSerializer;
 		private readonly ILibraryManager LibraryManager;
 
 		public Task RunAsync()
 		{
 			try
 			{
-				this.Logger.LogInformation(String.Format("Jellyfin.Plugin.LibraryStatistics: Started with this configuration: {0}", this.JsonSerializer.SerializeToString(Plugin.Instance.PluginConfiguration)));
+				this.Logger.LogInformation(String.Format("Jellyfin.Plugin.LibraryStatistics: Started with this configuration: {0}", JsonSerializer.Serialize(Plugin.Instance.PluginConfiguration)));
 
 				this.LibraryManager.ItemAdded += ItemAddedOrUpdatedOrRemoved;
 				this.LibraryManager.ItemUpdated += ItemAddedOrUpdatedOrRemoved;
