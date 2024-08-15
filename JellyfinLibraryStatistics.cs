@@ -1,13 +1,14 @@
-﻿using MediaBrowser.Controller.Library;
-using MediaBrowser.Controller.Plugins;
+using MediaBrowser.Controller.Library;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Jellyfin.Plugin.LibraryStatistics
 {
-	public class JellyfinLibraryStatistics : IServerEntryPoint
+	public class JellyfinLibraryStatistics : IHostedService
 	{
 		public JellyfinLibraryStatistics(ILogger<JellyfinLibraryStatistics> logger, ILibraryManager libraryManager)
 		{
@@ -18,7 +19,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 		private readonly ILogger<JellyfinLibraryStatistics> Logger;
 		private readonly ILibraryManager LibraryManager;
 
-		public Task RunAsync()
+		public Task StartAsync(CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -38,7 +39,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 			return Task.CompletedTask;
 		}
 
-		public void Dispose()
+		public Task StopAsync(CancellationToken cancellationToken)
 		{
 			try
 			{
@@ -50,6 +51,8 @@ namespace Jellyfin.Plugin.LibraryStatistics
 			{
 				this.Logger.LogError(ex, $"Jellyfin.Plugin.LibraryStatistics: {ex.Message}");
 			}
+
+			return Task.CompletedTask;
 		}
 
 		private void ItemAddedOrUpdatedOrRemoved(object sender, ItemChangeEventArgs e)

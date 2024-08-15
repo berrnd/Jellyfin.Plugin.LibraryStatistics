@@ -1,9 +1,6 @@
-﻿using Jellyfin.Data.Enums;
+using Jellyfin.Data.Enums;
 using MediaBrowser.Controller.Entities;
-using MediaBrowser.Controller.Entities.Movies;
-using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
-using MediaBrowser.Model.Querying;
 using MediaBrowser.Model.Tasks;
 using Microsoft.Extensions.Logging;
 using System;
@@ -31,7 +28,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 		public string Description => "Calculates library statistics.";
 
 		public string Category => "Jellyfin.Plugin.LibraryStatistics";
-		
+
 		public string Key => "LibraryStatistics";
 
 		public bool IsHidden => false;
@@ -40,8 +37,8 @@ namespace Jellyfin.Plugin.LibraryStatistics
 
 		public bool IsLogged => true;
 
-        public Task ExecuteAsync(IProgress<double> progress, CancellationToken cancellationToken)
-        {
+		public Task ExecuteAsync(IProgress<double> progress, CancellationToken cancellationToken)
+		{
 			if (Plugin.Instance.LibraryStatistics == null || Plugin.Instance.LibraryStatistics.NeedsRecalculation)
 			{
 				// Newest item date
@@ -52,7 +49,7 @@ namespace Jellyfin.Plugin.LibraryStatistics
 					SourceTypes = new[] { SourceType.Library },
 					IncludeItemTypes = new[] { BaseItemKind.Movie, BaseItemKind.Episode },
 					IsMissing = false,
-					OrderBy = new ValueTuple<string, SortOrder>[] { new ValueTuple<string, SortOrder>(ItemSortBy.DateCreated, SortOrder.Descending) },
+					OrderBy = new[] { (ItemSortBy.DateCreated, SortOrder.Descending) },
 					Limit = 1
 				};
 				Plugin.Instance.LibraryStatistics.NewestItemDate = this.LibraryManager.GetItemsResult(newestItemQuery).Items.First().DateCreated;
